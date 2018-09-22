@@ -1,2 +1,2 @@
 # NLP
-中文分词 ： ChineseSegmentation.py
+中文分词 ： BaseDict.py

@@ -14,7 +14,7 @@ class HMM(object):
         self.trans_p = {}
         self.emit_p = {}
 
-        self.model_file = '../hmm_model.pkl'
+        self.model_file = 'hmm_model.pkl'
         self.trained = False
 
     def train(self,datas,model_path=None):
@@ -92,24 +92,18 @@ class HMM(object):
         V = [{}]
         path = {}
         for y in states:
-            V[0][y] = start_p[y]*emit_p[y].get(text[0],0)
+            V[0][y] = start_p[y]*emit_p[y].get(text[0],1.0)
             path[y] = [y]
 
         for t in range(1,len(text)):
             V.append({})
             new_path = {}
 
-            never_seen = text[t] not in emit_p['B'].keys() and \
-                        text[t] not in emit_p['M'].keys() and \
-                        text[t] not in emit_p['E'].keys() and \
-                        text[t] not in emit_p['S'].keys()
-
             for y in states:
-                emitp = emit_p[y].get(text[t],0) if not never_seen else 1.0
+                emitp = emit_p[y].get(text[t],1.0)
 
-                (prob , state) = max([(V[t-1][y0]*trans_p[y0].get(y,0)*emitp,y0)\
-                                      for y0 in states if V[t-1][y0] > 0])
-
+                (prob , state) = max([(V[t - 1][y0] * trans_p[y0].get(y, 0) * emitp, y0) \
+                                      for y0 in states if V[t - 1][y0] > 0])
                 V[t][y] = prob
                 new_path[y] = path[state]+[y]
             path = new_path
@@ -144,7 +138,11 @@ class HMM(object):
 
 
 if __name__ == '__main__':
-    text = '结婚的和尚未结婚的充值钱费！'
+    text = '研究生命的起源'
+
+    train_data = 'corpus/train/pku_training.utf8'
+    model_file = 'hmm_model.pkl'
     hmm = HMM()
-    hmm.load_model('../hmm_model.pkl')
+    hmm.train(open(train_data, 'r', encoding='utf-8'), model_file)
+    hmm.load_model(model_file)
     print('/'.join(hmm.cut(text)))

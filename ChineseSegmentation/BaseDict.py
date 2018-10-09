@@ -2,7 +2,7 @@
 #-*- coding:utf-8 _*-  
 """ 
 @author: hiyoung 
-@file: ChineseSegmentation.py 
+@file: BaseDict.py
 @time: 2018/09/20
 """
 
@@ -73,15 +73,15 @@ class BIMM(object):
 
 if __name__ == '__main__':
     # Get word dict to list(),this is jieba dict.txt
-    dic_path = '..\jieba\dict.txt'
+    dic_path = 'D:\ProgramData\Anaconda3\Lib\site-packages\jieba\dict.txt'
     dic = []
-    with open(dic_path,'r') as f:
+    with open(dic_path, 'r',encoding='utf-8') as f:
         for line in f:
             word = line.strip().split()
             dic.append(word[0])
 
     text = '研究生命的起源'
-#     tokenizer = FMM(dic)
-#     tokenizer = RMM(dic)
+    #     tokenizer = FMM(dic)
+    #     tokenizer = RMM(dic)
     tokenizer = BIMM(dic)
     print('/'.join(tokenizer.cut(text)))
